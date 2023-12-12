@@ -6,7 +6,7 @@ class Entry {
     this.description = description
   }
   getFormattedAmount() {
-    return `${this.amount} €`
+    return `+${this.amount} €`
   }
 }
 
@@ -58,5 +58,48 @@ class Budget {
     })
     return sumOfExpenses
   }
-  getCurrentBalance() {}
+  getCurrentBalance() {
+    if (!this.entries.length) {
+      return 0
+    }
+    return this.getTotalIncome() - this.getTotalExpense()
+  }
+
+  getTotal(type) {
+    let sum = 0
+    this.entries.forEach((entry) => {
+      if (entry.type === type) {
+        sum += entry.amount
+      }
+    })
+  }
+
+  getFormattedEntries() {
+    let formattedArray = []
+    for (const entry of this.entries) {
+      const formattedString = `${entry.date} | ${
+        entry.description
+      } | ${entry.getFormattedAmount()}`
+      formattedArray.push(formattedString)
+    }
+    return formattedArray
+  }
 }
+
+const myBudget = new Budget()
+const lotteryTime = new Income("21-12-2023", 2_000_000, "Won the lottery", 15)
+const vintedSales = new Income("24-12-2023", 50, "Sold my TV", 15)
+const boughtACar = new Expense(
+  "12-12-2023",
+  13_000,
+  "It's red, it goes fast",
+  15,
+  false
+)
+
+myBudget.addEntry(lotteryTime)
+myBudget.addEntry(vintedSales)
+myBudget.addEntry(boughtACar)
+
+console.log(myBudget.getFormattedEntries())
+console.log(myBudget.getCurrentBalance())
